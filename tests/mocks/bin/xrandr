@@ -1,0 +1,10 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+. "$(dirname "$0")/_log"; mock_log "xrandr $*"
+if [ "${1:-}" = "--output" ]; then
+    [ -n "${RPI_CRT_MOCK_XRANDR_SET_FAIL:-}" ] && { echo "xrandr: Configure crtc 0 failed" >&2; exit 1; }
+    [ -n "${RPI_CRT_MOCK_XRANDR:-}" ] && exit 0
+fi
+if [ -n "${RPI_CRT_MOCK_XRANDR:-}" ]; then cat "$RPI_CRT_MOCK_XRANDR"; exit 0; fi
+echo "Can't open display ${DISPLAY:-}" >&2
+exit 1

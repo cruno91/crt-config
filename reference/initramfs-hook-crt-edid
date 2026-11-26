@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    prereqs)
+        exit 0
+        ;;
+esac
+
+mkdir -p "${DESTDIR}/lib/firmware/edid"
+
+for file in converter-480i.bin converter-crt.bin; do
+    cp "/lib/firmware/edid/${file}" \
+       "${DESTDIR}/lib/firmware/edid/${file}"
+done

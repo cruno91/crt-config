@@ -1,0 +1,15 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+# Reports every requested package as installed except those listed in
+# RPI_CRT_MOCK_MISSING_PKGS (space separated) unless apt-get "installed" them.
+. "$(dirname "$0")/_log"; mock_log "dpkg-query $*"
+for a in "$@"; do
+    case $a in -*) continue ;; esac
+    missing=0
+    for m in ${RPI_CRT_MOCK_MISSING_PKGS:-}; do [ "$m" = "$a" ] && missing=1; done
+    if [ $missing = 1 ] && [ -n "${RPI_CRT_MOCK_LOG:-}" ] && grep -q "^apt-get install.* $a\( \|$\)" "$RPI_CRT_MOCK_LOG" 2>/dev/null; then
+        missing=0
+    fi
+    if [ $missing = 0 ]; then echo "$a install ok installed"; else echo "dpkg-query: no packages found matching $a" >&2; fi
+done
+exit 0

@@ -1,0 +1,76 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Fast static checks: shell lint, Python syntax, EDID regeneration.
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+      - name: shellcheck
+        run: |
+          shellcheck -s sh -S warning install.sh verify.sh uninstall.sh \
+            templates/display-setup.sh templates/initramfs-hook.sh \
+            tests/playback.sh tests/test-installer.sh tests/run-container.sh
+      - name: EDID reproduces byte-for-byte
+        run: python3 -I edid/generate-edid.py --check
+      - name: Python compiles
+        run: python3 -m compileall -q lib edid tests
+
+  # Full suite on amd64 across Python versions, as an unprivileged user,
+  # with real X11/XRandR/libdrm headers and Xvfb so the C-helper tests run.
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install build and test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential pkg-config libx11-dev libxrandr-dev libdrm-dev \
+            xvfb x11-xserver-utils edid-decode shellcheck
+      - name: Run tests
+        run: tests/test-installer.sh -v
+
+  # Debian trixie arm64, the userland of the target Pi: the same container as
+  # tests/run-container.sh, run as root (initramfs hook tests) and as a user.
+  trixie-arm64:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build test image (cached)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: tests/container
+          tags: rpi-crt-test:trixie
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Run tests in container
+        run: tests/run-container.sh -v

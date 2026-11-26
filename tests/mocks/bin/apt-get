@@ -1,0 +1,5 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+. "$(dirname "$0")/_log"; mock_log "apt-get $*"
+[ -n "${RPI_CRT_MOCK_APT_FAIL:-}" ] && { echo "E: Unable to locate package" >&2; exit 100; }
+exit 0

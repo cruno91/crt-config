@@ -1,0 +1,3 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+. "$(dirname "$0")/_log"; mock_log "logger $*"

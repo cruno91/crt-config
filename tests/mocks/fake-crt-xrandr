@@ -1,0 +1,39 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+# Stand-in for the compiled helper in staged-root tests. Implements --print
+# like the real helper and a scriptable --query/create result.
+mock_log() { :; }
+if [ -n "${RPI_CRT_MOCK_BIN:-}" ] && [ -f "$RPI_CRT_MOCK_BIN/_log" ]; then . "$RPI_CRT_MOCK_BIN/_log"; fi
+mock_log "crt-xrandr $*"
+[ -n "${RPI_CRT_MOCK_HELPER_SLEEP:-}" ] && sleep "$RPI_CRT_MOCK_HELPER_SLEEP"
+output=HDMI-1 name=720x480i-crt clock=13500 h=720,779,841,858 v=480,488,494,525 flags=nhsync,nvsync,interlace,dblclk
+mode=create
+while [ $# -gt 0 ]; do
+    case $1 in
+        --output) output=$2; shift ;;
+        --name) name=$2; shift ;;
+        --clock) clock=$2; shift ;;
+        --h) h=$2; shift ;;
+        --v) v=$2; shift ;;
+        --flags) flags=$2; shift ;;
+        --print) mode=print ;;
+        --query) mode=query ;;
+        --require-active|--replace) ;;
+        *) exit 2 ;;
+    esac
+    shift
+done
+bits=0
+for f in $(echo "$flags" | tr ',' ' '); do
+    case $f in
+        phsync) b=1 ;; nhsync) b=2 ;; pvsync) b=4 ;; nvsync) b=8 ;; interlace) b=16 ;;
+        dblscan) b=32 ;; csync) b=64 ;; pcsync) b=128 ;; ncsync) b=256 ;; dblclk) b=4096 ;; *) exit 2 ;;
+    esac
+    bits=$((bits | b))
+done
+line=$(printf 'name=%s clock_khz=%s h=%s v=%s hskew=0 flags=0x%x' "$name" "$clock" "$h" "$v" "$bits")
+case $mode in
+    print) echo "$line" ;;
+    query) echo "state=active output=$output mode=0x20e $line"; exit "${RPI_CRT_MOCK_HELPER_QUERY_RC:-0}" ;;
+    create) echo "Custom mode registered: 0x20e"; exit "${RPI_CRT_MOCK_HELPER_RC:-0}" ;;
+esac

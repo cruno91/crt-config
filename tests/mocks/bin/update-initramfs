@@ -1,0 +1,24 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+# Simulates update-initramfs + the Raspberry Pi firmware post-update hook:
+# "runs" every hook in the staged root by collecting the *.bin firmware names
+# it references; fails like a real `set -e; cp` hook if one is missing. The
+# resulting "initramfs" is a plain-text file listing, read by mock lsinitramfs.
+. "$(dirname "$0")/_log"; mock_log "update-initramfs $*"
+[ -n "${RPI_CRT_MOCK_INITRAMFS_FAIL:-}" ] && { echo "update-initramfs: simulated failure" >&2; exit 1; }
+root=${RPI_CRT_ROOT:?}
+listing="usr/lib/modules/6.18.50+rpt-rpi-v8/kernel/drivers/gpu/drm/vc4/vc4.ko.xz"
+for hook in "$root"/etc/initramfs-tools/hooks/*; do
+    [ -f "$hook" ] || continue
+    for f in $(grep -o '[A-Za-z0-9._-]*\.bin' "$hook" | sort -u); do
+        if [ ! -f "$root/lib/firmware/edid/$f" ]; then
+            echo "cp: cannot stat '/lib/firmware/edid/$f': No such file or directory" >&2
+            echo "E: $hook failed with return 1." >&2
+            exit 1
+        fi
+        listing="$listing
+usr/lib/firmware/edid/$f"
+    done
+done
+printf '%s\n' "$listing" > "$root/boot/firmware/initramfs8"
+printf '%s\n' "$listing" > "$root/boot/firmware/initramfs_2712"

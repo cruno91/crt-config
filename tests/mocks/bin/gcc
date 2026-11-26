@@ -1,0 +1,15 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+# Writes a fake helper to the -o path, or runs the real compiler when
+# RPI_CRT_MOCK_REAL_GCC=1 (container tests with real X11 headers).
+. "$(dirname "$0")/_log"; mock_log "gcc $*"
+[ -n "${RPI_CRT_MOCK_GCC_FAIL:-}" ] && { echo "crt-xrandr.c:1: error: simulated" >&2; exit 1; }
+if [ -n "${RPI_CRT_MOCK_REAL_GCC:-}" ]; then exec /usr/bin/gcc "$@"; fi
+out=
+while [ $# -gt 0 ]; do
+    if [ "$1" = "-o" ]; then out=$2; shift; fi
+    shift
+done
+[ -n "$out" ] || exit 1
+cp "$(dirname "$0")/../fake-crt-xrandr" "$out"
+chmod 755 "$out"

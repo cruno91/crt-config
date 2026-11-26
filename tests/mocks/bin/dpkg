@@ -1,0 +1,5 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+. "$(dirname "$0")/_log"; mock_log "dpkg $*"
+[ "$1" = "--print-architecture" ] && { echo "${RPI_CRT_MOCK_ARCH:-arm64}"; exit 0; }
+exit 1

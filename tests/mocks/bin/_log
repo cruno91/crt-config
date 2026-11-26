@@ -1,0 +1,5 @@
+# sourced by mocks: append the invocation to $RPI_CRT_MOCK_LOG
+mock_log() {
+    [ -n "${RPI_CRT_MOCK_LOG:-}" ] && printf '%s\n' "$*" >> "$RPI_CRT_MOCK_LOG"
+    return 0
+}

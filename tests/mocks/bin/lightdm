@@ -1,0 +1,7 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+# --show-config output comes from RPI_CRT_MOCK_LIGHTDM_SHOW (a file); without it
+# the mock fails, which makes the tools fall back to their file model.
+. "$(dirname "$0")/_log"; mock_log "lightdm $*"
+[ "$1" = "--show-config" ] && [ -n "${RPI_CRT_MOCK_LIGHTDM_SHOW:-}" ] && { cat "$RPI_CRT_MOCK_LIGHTDM_SHOW"; exit 0; }
+exit 1

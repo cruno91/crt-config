@@ -1,0 +1,90 @@
+Screen 0: minimum 320 x 200, current 720 x 480, maximum 7680 x 7680
+HDMI-1 connected primary 720x480+0+0 (0x20e) normal (normal left inverted right x axis y axis) 0mm x 0mm
+	Identifier: 0x44
+	Timestamp:  24313
+	Subpixel:   unknown
+	Gamma:      1.0:1.0:1.0
+	Brightness: 1.0
+	Clones:    
+	CRTC:       0
+	CRTCs:      0
+	Transform:  1.000000 0.000000 0.000000
+	            0.000000 1.000000 0.000000
+	            0.000000 0.000000 1.000000
+	           filter: 
+	EDID: 
+		00ffffffffffff00328d000000000000
+		2d130103800000782cee91a3544c9926
+		0f505400000001010101010101010101
+		010101010101000000fc004c4f4e5449
+		554d0a20202020200000001000000000
+		00000000000000000000000000100000
+		00000000000000000000000000000010
+		0000000000000000000000000000019c
+		02031fc0418629090707090707090707
+		83010000e2000f67030c002000802d00
+		00000000000000000000000000000000
+		00000000000000000000000000000000
+		00000000000000000000000000000000
+		00000000000000000000000000000000
+		00000000000000000000000000000000
+		0000000000000000000000000000002f
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	bottom margin: 16 
+		range: (0, 100)
+	top margin: 16 
+		range: (0, 100)
+	right margin: 48 
+		range: (0, 100)
+	left margin: 8 
+		range: (0, 100)
+	Colorspace: Default 
+		supported: Default, SMPTE_170M_YCC, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, DCI-P3_RGB_Theater
+	max bpc: 8 
+		range: (8, 12)
+	link-status: Good 
+		supported: Good, Bad
+	CONNECTOR_ID: 35 
+		supported: 35
+	non-desktop: 0 
+		range: (0, 1)
+  720x480i (0x47) 13.514MHz -HSync -VSync Interlace
+        h: width   720 start  739 end  801 total  858 skew    0 clock  15.75KHz
+        v: height  480 start  488 end  494 total  525           clock  60.00Hz
+  720x480i (0x48) 13.500MHz -HSync -VSync Interlace
+        h: width   720 start  739 end  801 total  858 skew    0 clock  15.73KHz
+        v: height  480 start  488 end  494 total  525           clock  59.94Hz
+  720x480i-crt (0x20e) 13.500MHz -HSync -VSync Interlace *current
+        h: width   720 start  779 end  841 total  858 skew    0 clock  15.73KHz
+        v: height  480 start  488 end  494 total  525           clock  59.94Hz
+HDMI-2 disconnected (normal left inverted right x axis y axis)
+	Identifier: 0x45
+	Timestamp:  24313
+	Subpixel:   unknown
+	Clones:    
+	CRTCs:      4
+	Transform:  1.000000 0.000000 0.000000
+	            0.000000 1.000000 0.000000
+	            0.000000 0.000000 1.000000
+	           filter: 
+	Broadcast RGB: Automatic 
+		supported: Automatic, Full, Limited 16:235
+	bottom margin: 0 
+		range: (0, 100)
+	top margin: 0 
+		range: (0, 100)
+	right margin: 0 
+		range: (0, 100)
+	left margin: 0 
+		range: (0, 100)
+	Colorspace: Default 
+		supported: Default, SMPTE_170M_YCC, BT709_YCC, XVYCC_601, XVYCC_709, SYCC_601, opYCC_601, opRGB, BT2020_CYCC, BT2020_RGB, BT2020_YCC, DCI-P3_RGB_D65, DCI-P3_RGB_Theater
+	max bpc: 8 
+		range: (8, 12)
+	link-status: Good 
+		supported: Good, Bad
+	CONNECTOR_ID: 44 
+		supported: 44
+	non-desktop: 0 
+		range: (0, 1)

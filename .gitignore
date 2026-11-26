@@ -1,0 +1,7 @@
+# Raw archives and extracted machine state (contain PARTUUIDs/MAC addresses)
+*.tar.gz
+/reference-raw/
+/staging/
+__pycache__/
+*.pyc
+.idea/

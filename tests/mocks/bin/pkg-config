@@ -1,0 +1,5 @@
+#!/bin/sh
+PATH=$PATH:/usr/bin:/bin
+. "$(dirname "$0")/_log"; mock_log "pkg-config $*"
+if [ -n "${RPI_CRT_MOCK_REAL_GCC:-}" ]; then exec /usr/bin/pkg-config "$@"; fi
+echo "-lXrandr -lX11"

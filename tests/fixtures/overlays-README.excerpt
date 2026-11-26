@@ -1,0 +1,18 @@
+Name:   vc4-kms-v3d
+Info:   Enable the kernel DRM VC4 HDMI/HVS/V3D driver.
+Load:   dtoverlay=vc4-kms-v3d,<param>
+Params: cma-512                 CMA is 512MB (needs 1GB)
+        audio                   Enable or disable audio over HDMI0 (default
+                                "on")
+        audio1                  Enable or disable audio over HDMI1 (default
+                                "on")
+        noaudio                 Disable all HDMI audio (default "off")
+        composite               Enable the composite output (disables all other
+                                outputs)
+        nohdmi                  Disable both HDMI 0 & 1 outputs
+
+
+Name:   vc4-kms-v3d-pi5
+Info:   Enable the kernel DRM VC4 HDMI/HVS/V3D driver for Pi5.
+Load:   dtoverlay=vc4-kms-v3d-pi5,<param>
+Params: noaudio                 Disable all HDMI audio (default "off")
